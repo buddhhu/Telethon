@@ -518,8 +518,7 @@ def get_input_media(
     if isinstance(media, (
             types.MessageMediaEmpty, types.MessageMediaUnsupported,
             types.ChatPhotoEmpty, types.UserProfilePhotoEmpty,
-            types.ChatPhoto, types.UserProfilePhoto,
-            types.FileLocationToBeDeprecated)):
+            types.ChatPhoto, types.UserProfilePhoto)):
         return types.InputMediaEmpty()
 
     if isinstance(media, types.Message):
