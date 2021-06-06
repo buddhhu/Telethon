@@ -162,7 +162,7 @@ class _ParticipantsIter(RequestIter):
 
             users = {user.id: user for user in full.users}
             for participant in full.full_chat.participants.participants:
-                print(participant)
+                self.client._sender.log.info(participant)
                 user = users[participant.user_id]
                 if not self.filter_entity(user):
                     continue
@@ -208,7 +208,7 @@ class _ParticipantsIter(RequestIter):
             self.requests[i].offset += len(participants.participants)
             users = {user.id: user for user in participants.users}
             for participant in participants.participants:
-                print(participant)
+                self.client._sender.log.info(participant)
                 user = users[participant.user_id]
                 if not self.filter_entity(user) or user.id in self.seen:
                     continue
