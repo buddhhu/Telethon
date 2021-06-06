@@ -208,6 +208,7 @@ class _ParticipantsIter(RequestIter):
             self.requests[i].offset += len(participants.participants)
             users = {user.id: user for user in participants.users}
             for participant in participants.participants:
+                print(participant)
                 user = users[participant.user_id]
                 if not self.filter_entity(user) or user.id in self.seen:
                     continue
