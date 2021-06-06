@@ -1108,7 +1108,7 @@ class ChatMethods:
 
         return await self(functions.channels.EditBannedRequest(
             channel=entity,
-            user_id=user,
+            participant=user,
             banned_rights=rights
         ))
 
