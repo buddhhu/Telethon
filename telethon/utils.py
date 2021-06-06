@@ -822,8 +822,6 @@ def _get_file_info(location):
             thumb_size=location.sizes[-1].type
         ), _photo_size_byte_count(location.sizes[-1]))
 
-    if isinstance(location, types.FileLocationToBeDeprecated):
-        raise TypeError('Unavailable location cannot be used as input')
 
     _raise_cast_fail(location, 'InputFileLocation')
 
@@ -1215,11 +1213,7 @@ def resolve_bot_file_id(file_id):
             file_reference=b'',
             date=None,
             sizes=[types.PhotoSize(
-                type=photo_size,
-                location=types.FileLocationToBeDeprecated(
-                    volume_id=volume_id,
-                    local_id=local_id
-                ),
+                type=photo_size),
                 w=0,
                 h=0,
                 size=0
