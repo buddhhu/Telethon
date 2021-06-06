@@ -162,6 +162,7 @@ class _ParticipantsIter(RequestIter):
 
             users = {user.id: user for user in full.users}
             for participant in full.full_chat.participants.participants:
+                print(participant)
                 user = users[participant.user_id]
                 if not self.filter_entity(user):
                     continue
