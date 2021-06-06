@@ -271,7 +271,6 @@ class DownloadMethods:
 
         if isinstance(photo, (types.UserProfilePhoto, types.ChatPhoto)):
             dc_id = photo.dc_id
-            which = photo.photo_big if download_big else photo.photo_small
             loc = types.InputPeerPhotoFileLocation(
                 peer=await self.get_input_entity(entity),
                 photo_id=photo.photo_id,
