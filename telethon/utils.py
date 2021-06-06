@@ -1213,7 +1213,7 @@ def resolve_bot_file_id(file_id):
             file_reference=b'',
             date=None,
             sizes=[types.PhotoSize(
-                type=photo_size),
+                type=photo_size,
                 w=0,
                 h=0,
                 size=0
