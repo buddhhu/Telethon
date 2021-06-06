@@ -162,12 +162,17 @@ class _ParticipantsIter(RequestIter):
 
             users = {user.id: user for user in full.users}
             for participant in full.full_chat.participants.participants:
-                self.client._sender._log.info(participant)
-                user = users[participant.user_id]
+                
+                if isinstance(participant, types.ChannelParticipantBanned):
+                    userid = participant.peer.user_id
+                else:
+                    userid = participant.user_id
+                
+                user = users[userid]
                 if not self.filter_entity(user):
                     continue
 
-                user = users[participant.user_id]
+                user = users[userid]
                 user.participant = participant
                 self.buffer.append(user)
 
@@ -208,13 +213,17 @@ class _ParticipantsIter(RequestIter):
             self.requests[i].offset += len(participants.participants)
             users = {user.id: user for user in participants.users}
             for participant in participants.participants:
-                self.client._sender._log.info(participant)
-                user = users[participant.user_id]
+                if isinstance(participant, types.ChannelParticipantBanned):
+                    userid = participant.peer.user_id
+                else:
+                    userid = participant.user_id
+                
+                user = users[userid]
                 if not self.filter_entity(user) or user.id in self.seen:
                     continue
 
-                self.seen.add(participant.user_id)
-                user = users[participant.user_id]
+                self.seen.add(userid)
+                user = users[userid]
                 user.participant = participant
                 self.buffer.append(user)
 
