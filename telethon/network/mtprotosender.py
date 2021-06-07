@@ -501,6 +501,7 @@ class MTProtoSender:
             self._log.debug('Receiving items from the network...')
             try:
                 body = await self._connection.recv()
+                self._log.info(body)
             except IOError as e:
                 self._log.info('Connection closed while receiving data')
                 self._start_reconnect(e)
@@ -508,7 +509,10 @@ class MTProtoSender:
 
             try:
                 message = self._state.decrypt_message_data(body)
+                self._log.info(message)
             except TypeNotFoundError as e:
+                self._log.info(e)
+                self._log.info(dir(e))
                 # Received object which we don't know how to deserialize
                 self._log.info('Type %08x not found, remaining data %r',
                                e.invalid_constructor_id, e.remaining)
