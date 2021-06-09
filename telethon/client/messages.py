@@ -1123,26 +1123,12 @@ class MessageMethods:
             entity = entity.peer_id
 
         if formatting_entities is None:
-            user_dc_id_mismatch = self.session.dc_id != entity.dc_id
-            if user_dc_id_mismatch:
-                try:
-                    sender = await self._borrow_exported_sender(entity.dc_id)
-                    text, formatting_entities = await self._parse_message_text(text, parse_mode)
-                    file_handle, media, image = await self._file_to_media(file,
-                            supports_streaming=supports_streaming,
-                            thumb=thumb,
-                            attributes=attributes,
-                            force_document=force_document)
-                finally:
-                    await self._return_exported_sender(sender) # IDK what this line does even LOL
-            else:
-                sender = await self._borrow_exported_sender(entity.dc_id)
-                text, formatting_entities = await self._parse_message_text(text, parse_mode)
-                file_handle, media, image = await self._file_to_media(file,
-                            supports_streaming=supports_streaming,
-                            thumb=thumb,
-                            attributes=attributes,
-                            force_document=force_document)
+            text, formatting_entities = await self._parse_message_text(text, parse_mode)
+        file_handle, media, image = await self._file_to_media(file,
+                supports_streaming=supports_streaming,
+                thumb=thumb,
+                attributes=attributes,
+                force_document=force_document)
 
         if isinstance(entity, types.InputBotInlineMessageID):
             request = functions.messages.EditInlineBotMessageRequest(
