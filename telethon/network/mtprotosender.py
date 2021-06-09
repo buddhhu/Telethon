@@ -510,9 +510,7 @@ class MTProtoSender:
                 message = self._state.decrypt_message_data(body)
             except TypeNotFoundError as e:
                 # Received object which we don't know how to deserialize
-                self._log.info('Type %08x not found',
-                               e.invalid_constructor_id)
-                self._log.debug('Type %08x not found, remaining data %r',
+                self._log.info('Type %08x not found, remaining data %r',
                                e.invalid_constructor_id, e.remaining)
                 continue
             except SecurityError as e:
