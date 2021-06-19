@@ -784,7 +784,7 @@ class MessageMethods:
             return await self.send_file(
                 entity, file, caption=message, reply_to=reply_to,
                 attributes=attributes, parse_mode=parse_mode,
-                force_document=force_document,thumb=thumb,
+                force_document=force_document, thumb=thumb,
                 buttons=buttons, clear_draft=clear_draft, silent=silent,
                 schedule=schedule, supports_streaming=supports_streaming,
                 formatting_entities=formatting_entities,
@@ -1131,51 +1131,26 @@ class MessageMethods:
                 force_document=force_document)
 
         if isinstance(entity, types.InputBotInlineMessageID):
+            request = functions.messages.EditInlineBotMessageRequest(
+                id=entity,
+                message=text,
+                no_webpage=not link_preview,
+                entities=formatting_entities,
+                media=media,
+                reply_markup=self.build_reply_markup(buttons)
+            )
             # Invoke `messages.editInlineBotMessage` from the right datacenter.
             # Otherwise, Telegram will error with `MESSAGE_ID_INVALID` and do nothing.
-
-            if self.session.dc_id != entity.dc_id:
+            exported = self.session.dc_id != entity.dc_id
+            if exported:
                 try:
                     sender = await self._borrow_exported_sender(entity.dc_id)
-                    file_handle, media, image = await self._file_to_media(
-                        file,
-                        supports_streaming=supports_streaming,
-                        thumb=thumb,
-                        attributes=attributes,
-                        force_document=force_document)
-                    request = functions.messages.EditInlineBotMessageRequest(
-                        id=entity,
-                        message=text,
-                        no_webpage=not link_preview,
-                        entities=formatting_entities,
-                        media=media,
-                        reply_markup=self.build_reply_markup(buttons))
                     return await self._call(sender, request)
                 finally:
                     await self._return_exported_sender(sender)
             else:
-                file_handle, media, image = await self._file_to_media(
-                    file,
-                    supports_streaming=supports_streaming,
-                    thumb=thumb,
-                    attributes=attributes,
-                    force_document=force_document)
-                request = functions.messages.EditInlineBotMessageRequest(
-                    id=entity,
-                    message=text,
-                    no_webpage=not link_preview,
-                    entities=formatting_entities,
-                    media=media,
-                    reply_markup=self.build_reply_markup(buttons))
                 return await self(request)
 
-        file_handle, media, image = await self._file_to_media(
-            file,
-            supports_streaming=supports_streaming,
-            thumb=thumb,
-            attributes=attributes,
-            force_document=force_document)
-        
         entity = await self.get_input_entity(entity)
         request = functions.messages.EditMessageRequest(
             peer=entity,
@@ -1189,7 +1164,6 @@ class MessageMethods:
         )
         msg = self._get_response_message(request, await self(request), entity)
         return msg
-
 
     async def delete_messages(
             self: 'TelegramClient',
