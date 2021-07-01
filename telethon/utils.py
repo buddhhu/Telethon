@@ -9,7 +9,6 @@ import inspect
 import io
 import itertools
 import logging
-import math
 import mimetypes
 import os
 import pathlib
@@ -20,7 +19,7 @@ from mimetypes import guess_extension
 from types import GeneratorType
 
 from .extensions import markdown, html
-from .helpers import add_surrogate, del_surrogate, strip_text
+from .helpers import add_surrogate, del_surrogate
 from .tl import types
 
 try:
@@ -1127,6 +1126,7 @@ def resolve_bot_file_id(file_id):
     For thumbnails, the photo ID and hash will always be zero.
     """
     data = _rle_decode(_decode_telegram_base64(file_id))
+    file_reference = b''
     if not data:
         return None
 
@@ -1186,15 +1186,18 @@ def resolve_bot_file_id(file_id):
             attributes=attributes,
             file_reference=b''
         )
-    elif (version == 2 and len(data) == 44) or (version == 4 and len(data) in (49, 77)):
-        if version == 2:
+    elif (version == 2 and len(data) in [44, 37]) or (version == 4 and len(data) in (49, 77)):
+        if len(data)==37:
             (file_type, dc_id, media_id, access_hash,
+                file_reference, secret, local_id) = struct.unpack('<iiqqsqi', data)
+        elif version == 2:
+          (file_type, dc_id, media_id, access_hash,
                 volume_id, secret, local_id) = struct.unpack('<iiqqqqi', data)
         # else version == 4:
         elif len(data) == 49:
             # TODO Figure out what the extra five bytes mean
             (file_type, dc_id, media_id, access_hash,
-                volume_id, secret, local_id, _) = struct.unpack('<iiqqqqi5s', data)
+                volume_id, secret, local_id, _) = struct.unpack('<iiqqqsi5s', data)
         elif len(data) == 77:
             # See #1613.
             (file_type, dc_id, _, media_id, access_hash, volume_id, _, local_id, _) = struct.unpack('<ii28sqqq12sib', data)
@@ -1209,7 +1212,7 @@ def resolve_bot_file_id(file_id):
         return types.Photo(
             id=media_id,
             access_hash=access_hash,
-            file_reference=b'',
+            file_reference=file_reference,
             date=None,
             sizes=[types.PhotoSize(
                 type=photo_size,
@@ -1262,8 +1265,8 @@ def pack_bot_file_id(file):
             return None
 
         return _encode_telegram_base64(_rle_encode(struct.pack(
-            '<iiqqqqib', 2, file.dc_id, file.id, file.access_hash,
-            000000000, 0, 000000, 2  # 0 = old `secret`
+            '<iiqqsqib', 2, file.dc_id, file.id, file.access_hash,
+            file.file_reference, 0, 000000, 2  # 0 = old `secret`
         )))
     else:
         return None
