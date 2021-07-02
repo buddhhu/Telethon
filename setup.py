@@ -232,7 +232,7 @@ def main(argv):
             packages=find_packages(exclude=[
                 'telethon_*', 'tests*'
             ]),
-            install_requires=['pyaes', 'rsa'],
+            install_requires=['pyaes', 'rsa',"pycryptodome"],
             extras_require={
                 'cryptg': ['cryptg']
             }
