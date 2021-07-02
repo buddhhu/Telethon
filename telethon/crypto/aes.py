@@ -10,7 +10,8 @@ import os
 import pyaes
 import logging
 from . import libssl
-from pycrypto import ige_encrypt, ige_decrypt
+from .pycrypto import ige_encrypt, ige_decrypt
+
 __log__ = logging.getLogger(__name__)
 
 try:
