@@ -10,7 +10,7 @@ import os
 import pyaes
 import logging
 from . import libssl
-
+from pycrypto import ige_encrypt, ige_decrypt
 __log__ = logging.getLogger(__name__)
 
 try:
@@ -43,6 +43,7 @@ class AES:
         Decrypts the given text in 16-bytes blocks by using the
         given key and 32-bytes initialization vector.
         """
+        return ige_decrypt(cipher_text, key, iv)
         if pyaesni:
             return pyaesni.ige256_decrypt(cipher_text, key, iv)
         if cryptg:
@@ -86,6 +87,7 @@ class AES:
         if padding:
             plain_text += os.urandom(16 - padding)
 
+        return ige_encrypt(plain_text, key, iv)
         if pyaesni:
             return pyaesni.ige256_encrypt(plain_text, key, iv)
         if cryptg:
