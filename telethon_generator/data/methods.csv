@@ -310,6 +310,7 @@ phone.acceptCall,user,CALL_ALREADY_ACCEPTED CALL_ALREADY_DECLINED CALL_OCCUPY_FA
 phone.confirmCall,user,CALL_ALREADY_DECLINED CALL_PEER_INVALID
 phone.createGroupCall,user,SCHEDULE_DATE_INVALID
 phone.discardCall,user,CALL_ALREADY_ACCEPTED CALL_PEER_INVALID
+phone.discardGroupCallRequest,user,GROUPCALL_ALREADY_DISCARDED
 phone.editGroupCallParticipant,user,USER_VOLUME_INVALID
 phone.getCallConfig,user,
 phone.inviteToGroupCall,user,GROUPCALL_FORBIDDEN
