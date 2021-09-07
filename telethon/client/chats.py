@@ -22,7 +22,7 @@ class _ChatAction:
         'contact': types.SendMessageChooseContactAction(),
         'game': types.SendMessageGamePlayAction(),
         'location': types.SendMessageGeoLocationAction(),
-        'sticker': types.SendMessageChooseStickerAction(),
+      # 'sticker': types.SendMessageChooseStickerAction(),
 
         'record-audio': types.SendMessageRecordAudioAction(),
         'record-voice': types.SendMessageRecordAudioAction(),  # alias
