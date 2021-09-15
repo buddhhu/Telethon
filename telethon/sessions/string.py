@@ -43,9 +43,9 @@ class StringSession(MemorySession):
             if any(key):
                 self._auth_key = AuthKey(key)
 
-    """@staticmethod
+    @staticmethod
     def encode(x: bytes) -> str:
-        return base64.urlsafe_b64encode(x).decode("ascii")"""
+        return base64.urlsafe_b64encode(x).decode("ascii")
 
     @staticmethod
     def decode(x: str) -> bytes:
