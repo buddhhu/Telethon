@@ -1,7 +1,7 @@
 import asyncio
 import collections
 import struct
-from logging import WARNING
+from logging import WARNING, DEBUG
 from . import authenticator
 from ..extensions.messagepacker import MessagePacker
 from .mtprotoplainsender import MTProtoPlainSender
