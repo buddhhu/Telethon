@@ -73,7 +73,7 @@ class MTProtoSender:
         self._connection = None
         self._loggers = loggers
         self._log = loggers[__name__]
-        self._log.setLevel(WARNING)
+        self._log.setLevel(DEBUG)
         self._retries = retries
         self._delay = delay
         self._auto_reconnect = auto_reconnect
