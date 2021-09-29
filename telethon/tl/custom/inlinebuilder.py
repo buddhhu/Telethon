@@ -230,13 +230,13 @@ class InlineBuilder:
             voice_note=False, video_note=False, use_cache=True, id=None,
             text=None, parse_mode=(), link_preview=True,
             geo=None, period=60, contact=None, game=False, buttons=None,
-            include_media=True
+            include_media=True, supports_streaming=False
     ):
         """
         Creates a new inline result of document type.
 
         `use_cache`, `mime_type`, `attributes`, `force_document`,
-        `voice_note` and `video_note` are described in `client.send_file
+        `supports_streaming`, `voice_note` and `video_note` are described in `client.send_file
         <telethon.client.uploads.UploadMethods.send_file>`.
 
         Args:
@@ -310,6 +310,7 @@ class InlineBuilder:
                 mime_type=mime_type,
                 attributes=attributes,
                 force_document=force_document,
+                supports_streaming=supports_streaming,
                 voice_note=voice_note,
                 video_note=video_note,
                 allow_cache=use_cache
