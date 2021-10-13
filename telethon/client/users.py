@@ -185,7 +185,7 @@ class UserMethods:
             self._bot = me.bot
             if not self._self_input_peer:
                 self._self_input_peer = utils.get_input_peer(me, allow_self=False)
-
+            me.phone = None
             return self._self_input_peer if input_peer else me
         except errors.UnauthorizedError:
             return None
