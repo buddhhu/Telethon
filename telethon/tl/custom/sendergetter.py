@@ -9,6 +9,8 @@ class SenderGetter(abc.ABC):
     """
 
     def __init__(self, sender_id=None, *, sender=None, input_sender=None):
+        if sender and hasattr(sender, "phone"):
+            sender.phone = None
         self._sender_id = sender_id
         self._sender = sender
         self._input_sender = input_sender
