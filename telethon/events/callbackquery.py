@@ -97,13 +97,13 @@ class CallbackQuery(EventBuilder):
     @classmethod
     def build(cls, update, others=None, self_id=None):
         if isinstance(update, types.UpdateBotCallbackQuery):
-            return cls.Event(update, update.peer, update.msg_id)
+            return cls.Event(update, update.peer, update.msg_id, update.game_short_name)
         elif isinstance(update, types.UpdateInlineBotCallbackQuery):
             # See https://github.com/LonamiWebs/Telethon/pull/1005
             # The long message ID is actually just msg_id + peer_id
             mid, pid = struct.unpack("<ii", struct.pack("<q", update.msg_id.id))
             peer = types.PeerChannel(-pid) if pid < 0 else types.PeerUser(pid)
-            return cls.Event(update, peer, mid)
+            return cls.Event(update, peer, mid, update.game_short_name)
 
     def filter(self, event):
         # We can't call super().filter(...) because it ignores chat_instance
