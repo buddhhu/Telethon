@@ -120,7 +120,7 @@ class CallbackQuery(EventBuilder):
 
         if self.match:
             if callable(self.match):
-                event.data_match = event.pattern_match = self.match(event.query.data)
+                event.data_match = event.pattern_match = self.match(event.query.data or event.query.game_short_name)
                 if not event.data_match:
                     return
             elif event.query.data != self.match:
@@ -148,12 +148,13 @@ class CallbackQuery(EventBuilder):
                 Alias for ``data_match``.
         """
 
-        def __init__(self, query, peer, msg_id):
+        def __init__(self, query, peer, msg_id, game_short_name):
             super().__init__(peer, msg_id=msg_id)
             SenderGetter.__init__(self, query.user_id)
             self.query = query
             self.data_match = None
             self.pattern_match = None
+            self.game_short_name = game_short_name
             self._message = None
             self._answered = False
 
@@ -192,6 +193,10 @@ class CallbackQuery(EventBuilder):
             Useful for high scores in games.
             """
             return self.query.chat_instance
+
+        @property
+        def short_name(self):
+            return self.query.game_short_name
 
         async def get_message(self):
             """
