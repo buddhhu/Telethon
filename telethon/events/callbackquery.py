@@ -120,7 +120,11 @@ class CallbackQuery(EventBuilder):
 
         if self.match:
             if callable(self.match):
-                event.data_match = event.pattern_match = self.match(event.query.data or event.query.game_short_name)
+                if event.query.game_short_name:
+                    _ = event.query.game_short_name.encode()
+                else:
+                    _ = event.query.data
+                event.data_match = event.pattern_match = self.match(_)
                 if not event.data_match:
                     return
             elif event.query.data != self.match:
