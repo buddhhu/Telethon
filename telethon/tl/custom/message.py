@@ -181,6 +181,7 @@ class Message(ChatGetter, SenderGetter, TLObject):
 
             # For Message (flags)
             fwd_from: Optional[types.TypeMessageFwdHeader] = None,
+            noforwards: bool = None,
             via_bot_id: Optional[int] = None,
             media: Optional[types.TypeMessageMedia] = None,
             reply_markup: Optional[types.TypeReplyMarkup] = None,
@@ -223,6 +224,7 @@ class Message(ChatGetter, SenderGetter, TLObject):
         self.views = views
         self.forwards = forwards
         self.replies = replies
+        self.noforwards = noforwards
         self.edit_date = edit_date
         self.pinned = pinned
         self.post_author = post_author
