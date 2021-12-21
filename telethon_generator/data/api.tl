@@ -1304,11 +1304,13 @@ auth.loggedOut#c3a2835f flags:# future_auth_token:flags.0?bytes = auth.LoggedOut
 
 updateMessageReactions#154798c3 peer:Peer msg_id:int reactions:MessageReactions = Update;
 reactionCount#6fb250d1 flags:# chosen:flags.0?true reaction:string count:int = ReactionCount;
-messageReactions#87b6e36 flags:# min:flags.0?true results:Vector<ReactionCount> recent_reactons:flags.1?Vector<MessageUserReaction> = MessageReactions;
+messageReactions#87b6e36 flags:# min:flags.0?true results:Vector<ReactionCount> recent_reactions:flags.1?Vector<MessageUserReaction> = MessageReactions;
 messageUserReaction#932844fa user_id:long reaction:string = MessageUserReaction;
 messages.messageReactionsList#a366923c flags:# count:int reactions:Vector<MessageUserReaction> users:Vector<User> next_offset:flags.0?string = messages.MessageReactionsList;
 availableReaction#64222f31 reaction:string title:string static_icon:Document select_animation:Document activate_animation:Document effect_animation:Document = AvailableReaction;
 message#85d6cbe2 flags:# out:flags.1?true mentioned:flags.4?true media_unread:flags.5?true silent:flags.13?true post:flags.14?true from_scheduled:flags.18?true legacy:flags.19?true edit_hide:flags.21?true pinned:flags.24?true noforwards:flags.26?true id:int from_id:flags.8?Peer peer_id:Peer fwd_from:flags.2?MessageFwdHeader via_bot_id:flags.11?long reply_to:flags.3?MessageReplyHeader date:int message:string media:flags.9?MessageMedia reply_markup:flags.6?ReplyMarkup entities:flags.7?Vector<MessageEntity> views:flags.10?int forwards:flags.10?int replies:flags.23?MessageReplies edit_date:flags.15?int post_author:flags.16?string grouped_id:flags.17?long restriction_reason:flags.22?Vector<RestrictionReason> ttl_period:flags.25?int = Message;
+messageEntitySpoiler#32ca960f offset:int length:int = MessageEntity;
+
 ---functions---
 
 invokeAfterMsg#cb9f372d {X:Type} msg_id:long query:!X = X;
