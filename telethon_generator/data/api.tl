@@ -1304,7 +1304,7 @@ auth.loggedOut#c3a2835f flags:# future_auth_token:flags.0?bytes = auth.LoggedOut
 
 updateMessageReactions#154798c3 peer:Peer msg_id:int reactions:MessageReactions = Update;
 reactionCount#6fb250d1 flags:# chosen:flags.0?true reaction:string count:int = ReactionCount;
-messageReactions#87b6e36 flags:# min:flags.0?true results:Vector<ReactionCount> recent_reactons:flags.1?Vector<MessageUserReaction> = MessageReactions;
+messageReactions#38116ee0 flags:# min:flags.0?true results:Vector<ReactionCount> recent_reactions:flags.1?Vector<MessageUserReaction> = MessageReactions;
 messageUserReaction#932844fa user_id:long reaction:string = MessageUserReaction;
 messages.messageReactionsList#a366923c flags:# count:int reactions:Vector<MessageUserReaction> users:Vector<User> next_offset:flags.0?string = messages.MessageReactionsList;
 availableReaction#64222f31 reaction:string title:string static_icon:Document select_animation:Document activate_animation:Document effect_animation:Document = AvailableReaction;
