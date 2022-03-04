@@ -197,7 +197,7 @@ class Message(ChatGetter, SenderGetter, TLObject):
             restriction_reason: Optional[types.TypeRestrictionReason] = None,
             forwards: Optional[int] = None,
             replies: Optional[types.TypeMessageReplies] = None,
-
+            reactions=None,
             # For MessageAction (mandatory)
             action: Optional[types.TypeMessageAction] = None
     ):
@@ -223,6 +223,7 @@ class Message(ChatGetter, SenderGetter, TLObject):
         self.entities = entities
         self.views = views
         self.forwards = forwards
+        self.reactions = reactions
         self.replies = replies
         self.noforwards = noforwards
         self.edit_date = edit_date
