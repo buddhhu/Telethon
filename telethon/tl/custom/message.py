@@ -348,13 +348,11 @@ class Message(ChatGetter, SenderGetter, TLObject):
         parse mode. Will be `None` for :tl:`MessageService`.
         """
         if self._text is None and self._client:
-            if not self._client.parse_mode:
-                self._text = self.message
-            else:
-                self._text = self._client.parse_mode.unparse(
-                    self.message, self.entities
-                )
-
+            self._text = (
+                self._client.parse_mode.unparse(self.message, self.entities)
+                if self._client.parse_mode
+                else self.message
+            )
         return self._text
 
     @text.setter
@@ -470,8 +468,7 @@ class Message(ChatGetter, SenderGetter, TLObject):
         etc., without having to manually inspect the ``document.attributes``.
         """
         if not self._file:
-            media = self.photo or self.document
-            if media:
+            if media := self.photo or self.document:
                 self._file = File(media)
 
         return self._file
@@ -764,22 +761,14 @@ class Message(ChatGetter, SenderGetter, TLObject):
             if not self.reply_to:
                 return None
 
-            # Bots cannot access other bots' messages by their ID.
-            # However they can access them through replies...
-            self._reply_message = await self._client.get_messages(
-                await self.get_input_chat() if self.is_channel else None,
-                ids=types.InputMessageReplyTo(self.id),
-            )
-            if not self._reply_message:
-                # ...unless the current message got deleted.
-                #
-                # If that's the case, give it a second chance accessing
-                # directly by its ID.
+            else:
                 self._reply_message = await self._client.get_messages(
+                    await self.get_input_chat() if self.is_channel else None,
+                    ids=types.InputMessageReplyTo(self.id),
+                ) or await self._client.get_messages(
                     self._input_chat if self.is_channel else None,
                     ids=self.reply_to.reply_to_msg_id,
                 )
-
         return self._reply_message
 
     async def respond(self, *args, **kwargs):
@@ -1089,10 +1078,7 @@ class Message(ChatGetter, SenderGetter, TLObject):
 
             if i is None:
                 i = 0
-            if j is None:
-                return self._buttons_flat[i]
-            else:
-                return self._buttons[i][j]
+            return self._buttons_flat[i] if j is None else self._buttons[i][j]
 
         button = find_button()
         if button:
@@ -1217,10 +1203,10 @@ class Message(ChatGetter, SenderGetter, TLObject):
                 if isinstance(button, types.KeyboardButtonSwitchInline):
                     # no via_bot_id means the bot sent the message itself (#1619)
                     if button.same_peer and not self.via_bot_id:
-                        bot = self.input_sender
-                        if not bot:
+                        if bot := self.input_sender:
+                            return bot
+                        else:
                             raise ValueError("No input sender")
-                        return bot
                     else:
                         try:
                             return self._client._entity_cache[self.via_bot_id]
@@ -1232,12 +1218,9 @@ class Message(ChatGetter, SenderGetter, TLObject):
         Helper method to return the document only if it has an attribute
         that's an instance of the given kind, and passes the condition.
         """
-        doc = self.document
-        if doc:
+        if doc := self.document:
             for attr in doc.attributes:
                 if isinstance(attr, kind):
-                    if not condition or condition(attr):
-                        return doc
-                    return None
+                    return doc if not condition or condition(attr) else None
 
     # endregion Private Methods

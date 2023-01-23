@@ -12,14 +12,9 @@ class HttpPacketCodec(PacketCodec):
 
     def encode_packet(self, data):
         return (
-            "POST /api HTTP/1.1\r\n"
-            "Host: {}:{}\r\n"
-            "Content-Type: application/x-www-form-urlencoded\r\n"
-            "Connection: keep-alive\r\n"
-            "Keep-Alive: timeout=100000, max=10000000\r\n"
-            "Content-Length: {}\r\n\r\n".format(
-                self._conn._ip, self._conn._port, len(data)
-            ).encode("ascii")
+            f"POST /api HTTP/1.1\r\nHost: {self._conn._ip}:{self._conn._port}\r\nContent-Type: application/x-www-form-urlencoded\r\nConnection: keep-alive\r\nKeep-Alive: timeout=100000, max=10000000\r\nContent-Length: {len(data)}\r\n\r\n".encode(
+                "ascii"
+            )
             + data
         )
 

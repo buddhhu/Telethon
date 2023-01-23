@@ -189,11 +189,11 @@ class NewMessage(EventBuilder):
             return
 
         if self.pattern:
-            match = self.pattern(event.message.message or "")
-            if not match:
-                return
-            event.pattern_match = match
+            if match := self.pattern(event.message.message or ""):
+                event.pattern_match = match
 
+            else:
+                return
         return super().filter(event)
 
     class Event(EventCommon):

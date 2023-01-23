@@ -81,7 +81,7 @@ async def handler(event):
 
         message = await event.reply('Downloading your profile photo...')
         file = await client.download_profile_photo(replied_to_user)
-        await message.edit('I saved your photo in {}'.format(file))
+        await message.edit(f'I saved your photo in {file}')
 
 
 client = TelegramClient(

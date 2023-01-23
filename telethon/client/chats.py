@@ -172,7 +172,7 @@ class _ParticipantsIter(RequestIter):
 
             users = {user.id: user for user in full.users}
             for chat in full.chats:
-                users.update({chat.id:chat})
+                users[chat.id] = chat
             for participant in full.full_chat.participants.participants:
                 if isinstance(participant, types.ChannelParticipantBanned):
                     peer = participant.peer
@@ -255,7 +255,7 @@ class _ParticipantsIter(RequestIter):
             self.requests[i].offset += len(participants.participants)
             users = {user.id: user for user in participants.users}
             for chat in participants.chats:
-                users.update({chat.id: chat})
+                users[chat.id] = chat
             for participant in participants.participants:
 
                 if isinstance(participant, types.ChannelParticipantBanned):
@@ -896,7 +896,7 @@ class ChatMethods:
             try:
                 action = _ChatAction._str_mapping[action.lower()]
             except KeyError:
-                raise ValueError('No such action "{}"'.format(action)) from None
+                raise ValueError(f'No such action "{action}"') from None
         elif (
             not isinstance(action, types.TLObject)
             or action.SUBCLASS_OF_ID != 0x20B2CC21
@@ -905,7 +905,7 @@ class ChatMethods:
             if isinstance(action, type):
                 raise ValueError("You must pass an instance, not the class")
             else:
-                raise ValueError("Cannot use {} as action".format(action))
+                raise ValueError(f"Cannot use {action} as action")
 
         if isinstance(action, types.SendMessageCancelAction):
             # ``SetTypingRequest.resolve`` will get input peer of ``entity``.

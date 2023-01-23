@@ -39,10 +39,7 @@ def _syncify_wrap(t, method_name):
     def syncified(*args, **kwargs):
         coro = method(*args, **kwargs)
         loop = asyncio.get_event_loop()
-        if loop.is_running():
-            return coro
-        else:
-            return loop.run_until_complete(coro)
+        return coro if loop.is_running() else loop.run_until_complete(coro)
 
     # Save an accessible reference to the original method
     setattr(syncified, "__tl.sync", method)

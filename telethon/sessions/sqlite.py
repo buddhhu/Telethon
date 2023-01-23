@@ -59,8 +59,7 @@ class SQLiteSession(MemorySession):
 
             # These values will be saved
             c.execute("select * from sessions")
-            tuple_ = c.fetchone()
-            if tuple_:
+            if tuple_ := c.fetchone():
                 (
                     self._dc_id,
                     self._server_address,
@@ -166,7 +165,7 @@ class SQLiteSession(MemorySession):
     @staticmethod
     def _create_table(c, *definitions):
         for definition in definitions:
-            c.execute("create table {}".format(definition))
+            c.execute(f"create table {definition}")
 
     # Data from sessions should be kept as properties
     # not to fetch the database every time we need it
@@ -176,10 +175,7 @@ class SQLiteSession(MemorySession):
 
         # Fetch the auth_key corresponding to this data center
         row = self._execute("select auth_key from sessions")
-        if row and row[0]:
-            self._auth_key = AuthKey(data=row[0])
-        else:
-            self._auth_key = None
+        self._auth_key = AuthKey(data=row[0]) if row and row[0] else None
 
     @MemorySession.auth_key.setter
     def auth_key(self, value):
@@ -212,10 +208,10 @@ class SQLiteSession(MemorySession):
         c.close()
 
     def get_update_state(self, entity_id):
-        row = self._execute(
-            "select pts, qts, date, seq from update_state " "where id = ?", entity_id
-        )
-        if row:
+        if row := self._execute(
+            "select pts, qts, date, seq from update_state " "where id = ?",
+            entity_id,
+        ):
             pts, qts, date, seq = row
             date = datetime.datetime.fromtimestamp(date, tz=datetime.timezone.utc)
             return types.updates.State(pts, qts, date, seq, unread_count=0)
@@ -346,20 +342,19 @@ class SQLiteSession(MemorySession):
     # File processing
 
     def get_file(self, md5_digest, file_size, cls):
-        row = self._execute(
+        if row := self._execute(
             "select id, hash from sent_files "
             "where md5_digest = ? and file_size = ? and type = ?",
             md5_digest,
             file_size,
             _SentFileType.from_type(cls).value,
-        )
-        if row:
+        ):
             # Both allowed classes have (id, access_hash) as parameters
             return cls(row[0], row[1])
 
     def cache_file(self, md5_digest, file_size, instance):
         if not isinstance(instance, (InputDocument, InputPhoto)):
-            raise TypeError("Cannot cache %s instance" % type(instance))
+            raise TypeError(f"Cannot cache {type(instance)} instance")
 
         self._execute(
             "insert or replace into sent_files values (?,?,?,?,?)",

@@ -117,14 +117,18 @@ class Dialog:
         await self._client.delete_dialog(self.entity, revoke=revoke)
 
     async def pin(self, unpin=False):
-        if not unpin:
-            return await self._client(
+        return (
+            await self._client(
+                functions.messages.ToggleDialogPinRequest(
+                    self.input_entity, pinned=False
+                )
+            )
+            if unpin
+            else await self._client(
                 functions.messages.ToggleDialogPinRequest(
                     self.input_entity, pinned=True
                 )
             )
-        return await self._client(
-            functions.messages.ToggleDialogPinRequest(self.input_entity, pinned=False)
         )
 
     async def archive(self, folder=1):

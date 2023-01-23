@@ -22,9 +22,9 @@ def make_link_node(rawtext, app, name, options):
         base += '/'
 
     set_classes(options)
-    return nodes.reference(rawtext, utils.unescape(name),
-                           refuri='{}?q={}'.format(base, name),
-                           **options)
+    return nodes.reference(
+        rawtext, utils.unescape(name), refuri=f'{base}?q={name}', **options
+    )
 
 
 # noinspection PyUnusedLocal

@@ -57,9 +57,7 @@ class BinaryReader:
         result = self.stream.read(length)
         if (length >= 0) and (len(result) != length):
             raise BufferError(
-                "No more data left to read (need {}, got {}: {}); last read {}".format(
-                    length, len(result), repr(result), repr(self._last)
-                )
+                f"No more data left to read (need {length}, got {len(result)}: {repr(result)}); last read {repr(self._last)}"
             )
 
         self._last = result
@@ -107,7 +105,7 @@ class BinaryReader:
         elif value == 0xBC799737:  # boolFalse
             return False
         else:
-            raise RuntimeError("Invalid boolean code {}".format(hex(value)))
+            raise RuntimeError(f"Invalid boolean code {hex(value)}")
 
     def tgread_date(self):
         """Reads and converts Unix time (used by Telegram)

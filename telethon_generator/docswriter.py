@@ -71,8 +71,7 @@ class DocsWriter:
            Must be called before adding entries to the menu
         """
         if img:
-            self.menu_separator_tag = '<img src="{}" alt="/" />'.format(
-                self._rel(img))
+            self.menu_separator_tag = f'<img src="{self._rel(img)}" alt="/" />'
         else:
             self.menu_separator_tag = None
 
@@ -248,15 +247,13 @@ class DocsWriter:
         """Writes a button with 'text' which can be used
            to copy 'text_to_copy' to clipboard when it's clicked."""
         self.write_copy_script = True
-        self.write('<button onclick="cp(\'{}\');">{}</button>'
-                   .format(text_to_copy, text))
+        self.write(f"""<button onclick="cp(\'{text_to_copy}\');">{text}</button>""")
 
     def add_script(self, src='', path=None):
         if path:
-            self._script += '<script src="{}"></script>'.format(
-                self._rel(path))
+            self._script += f'<script src="{self._rel(path)}"></script>'
         elif src:
-            self._script += '<script>{}</script>'.format(src)
+            self._script += f'<script>{src}</script>'
 
     def end_body(self):
         """Ends the whole document. This should be called the last"""

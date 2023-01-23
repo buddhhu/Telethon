@@ -158,10 +158,7 @@ class StateCache:
 
         If no information is known, ``pts`` will be `None`.
         """
-        if item is None:
-            return self._pts_date
-        else:
-            return self.__dict__.get(item)
+        return self._pts_date if item is None else self.__dict__.get(item)
 
     def __setitem__(self, where, value):
         if where is None:

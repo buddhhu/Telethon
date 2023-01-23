@@ -85,7 +85,7 @@ class Connection(abc.ABC):
             elif proxy_type in [ProxyType.HTTP, 3, "http"]:
                 protocol = ProxyType.HTTP
             else:
-                raise ValueError("Unknown proxy protocol type: {}".format(proxy_type))
+                raise ValueError(f"Unknown proxy protocol type: {proxy_type}")
 
             # This tuple must be compatible with `python_socks`' `Proxy.create()` signature
             return protocol, addr, port, username, password, rdns
@@ -100,7 +100,7 @@ class Connection(abc.ABC):
             elif proxy_type in [3, "http"]:
                 protocol = HTTP
             else:
-                raise ValueError("Unknown proxy protocol type: {}".format(proxy_type))
+                raise ValueError(f"Unknown proxy protocol type: {proxy_type}")
 
             # This tuple must be compatible with `PySocks`' `socksocket.set_proxy()` signature
             return protocol, addr, port, rdns, username, password
@@ -111,7 +111,7 @@ class Connection(abc.ABC):
         elif isinstance(self._proxy, dict):
             parsed = self._parse_proxy(**self._proxy)
         else:
-            raise TypeError("Proxy of unknown format: {}".format(type(self._proxy)))
+            raise TypeError(f"Proxy of unknown format: {type(self._proxy)}")
 
         # Always prefer `python_socks` when available
         if python_socks:
@@ -212,9 +212,7 @@ class Connection(abc.ABC):
         elif isinstance(self._local_addr, str):
             local_addr = (self._local_addr, 0)
         else:
-            raise ValueError(
-                "Unknown local address format: {}".format(self._local_addr)
-            )
+            raise ValueError(f"Unknown local address format: {self._local_addr}")
         if not self._proxy:
             self._reader, self._writer = await asyncio.wait_for(
                 asyncio.open_connection(
@@ -364,9 +362,7 @@ class Connection(abc.ABC):
         return await self._codec.read_packet(self._reader)
 
     def __str__(self):
-        return "{}:{}/{}".format(
-            self._ip, self._port, self.__class__.__name__.replace("Connection", "")
-        )
+        return f'{self._ip}:{self._port}/{self.__class__.__name__.replace("Connection", "")}'
 
 
 class ObfuscatedConnection(Connection):

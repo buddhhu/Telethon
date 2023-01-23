@@ -30,11 +30,11 @@ class Raw(EventBuilder):
             self.types = None
         elif not utils.is_list_like(types):
             if not isinstance(types, type):
-                raise TypeError("Invalid input type given: {}".format(types))
+                raise TypeError(f"Invalid input type given: {types}")
 
             self.types = types
         elif not all(isinstance(x, type) for x in types):
-            raise TypeError("Invalid input types given: {}".format(types))
+            raise TypeError(f"Invalid input types given: {types}")
 
         else:
             self.types = tuple(types)
@@ -48,7 +48,4 @@ class Raw(EventBuilder):
 
     def filter(self, event):
         if not self.types or isinstance(event, self.types):
-            if self.func:
-                # Return the result of func directly as it may need to be awaited
-                return self.func(event)
-            return event
+            return self.func(event) if self.func else event

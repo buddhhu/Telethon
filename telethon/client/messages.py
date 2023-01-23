@@ -561,10 +561,7 @@ class MessageMethods:
                 message_1337 = await client.get_messages(chat, ids=1337)
         """
         if len(args) == 1 and 'limit' not in kwargs:
-            if 'min_id' in kwargs and 'max_id' in kwargs:
-                kwargs['limit'] = None
-            else:
-                kwargs['limit'] = 1
+            kwargs['limit'] = None if 'min_id' in kwargs and 'max_id' in kwargs else 1
         if isinstance(entity, str) and "/" in entity:
             split = entity.split("/")
             try:
@@ -573,11 +570,11 @@ class MessageMethods:
                 if "?comment=" in ids:
                     ids = int(ids.split("=")[-1])
                     entity = (await self(functions.channels.GetFullChannelRequest(entity))).full_chat.linked_chat_id
-                kwargs.update({"entity":entity, "ids":ids})
+                kwargs |= {"entity":entity, "ids":ids}
             except (KeyError, IndexError):
-                kwargs.update({"entity":entity})
+                kwargs["entity"] = entity
         else:
-            kwargs.update({"entity":entity})
+            kwargs["entity"] = entity
         it = self.iter_messages(*args, **kwargs)
 
         ids = kwargs.get('ids')

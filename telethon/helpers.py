@@ -30,8 +30,7 @@ def generate_random_long(signed=True):
 
 def ensure_parent_dir_exists(file_path):
     """Ensures that the parent directory exists"""
-    parent = os.path.dirname(file_path)
-    if parent:
+    if parent := os.path.dirname(file_path):
         os.makedirs(parent, exist_ok=True)
 
 
@@ -123,10 +122,7 @@ def retry_range(retries, force_retry=True):
 
 
 async def _maybe_await(value):
-    if inspect.isawaitable(value):
-        return await value
-    else:
-        return value
+    return await value if inspect.isawaitable(value) else value
 
 
 async def _cancel(log, **tasks):
@@ -212,24 +208,24 @@ def _entity_type(entity):
             0x1F4661B9,  # crc32(b'UserFull')
             0xD49A2697,  # crc32(b'ChatFull')
         ):
-            raise TypeError("{} does not have any entity type".format(entity))
+            raise TypeError(f"{entity} does not have any entity type")
     except AttributeError:
-        raise TypeError(
-            "{} is not a TLObject, cannot determine entity type".format(entity)
-        )
+        raise TypeError(f"{entity} is not a TLObject, cannot determine entity type")
 
     name = entity.__class__.__name__
-    if "User" in name:
+    if (
+        "User" in name
+        or "Chat" not in name
+        and "Channel" not in name
+        and "Self" in name
+    ):
         return _EntityType.USER
     elif "Chat" in name:
         return _EntityType.CHAT
     elif "Channel" in name:
         return _EntityType.CHANNEL
-    elif "Self" in name:
-        return _EntityType.USER
-
     # 'Empty' in name or not found, we don't care, not a valid entity.
-    raise TypeError("{} does not have any entity type".format(entity))
+    raise TypeError(f"{entity} does not have any entity type")
 
 
 # endregion
@@ -284,10 +280,10 @@ class TotalList(list):
         self.total = 0
 
     def __str__(self):
-        return "[{}, total={}]".format(", ".join(str(x) for x in self), self.total)
+        return f'[{", ".join(str(x) for x in self)}, total={self.total}]'
 
     def __repr__(self):
-        return "[{}, total={}]".format(", ".join(repr(x) for x in self), self.total)
+        return f'[{", ".join(repr(x) for x in self)}, total={self.total}]'
 
 
 class _FileStream(io.IOBase):

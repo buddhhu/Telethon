@@ -204,13 +204,14 @@ class Conversation(ChatGetter):
         # If there is no last-chosen ID, make sure to pick one *after*
         # the input message, since we don't want responses back in time
         if target_id not in indices:
-            for i, incoming in enumerate(self._incoming):
-                if incoming.id > target_id:
-                    indices[target_id] = i
-                    break
-            else:
-                indices[target_id] = len(self._incoming)
-
+            indices[target_id] = next(
+                (
+                    i
+                    for i, incoming in enumerate(self._incoming)
+                    if incoming.id > target_id
+                ),
+                len(self._incoming),
+            )
         # We will always return a future from here, even if the result
         # can be set immediately. Otherwise, needing to await only
         # sometimes is an annoying edge case (i.e. we would return
@@ -359,9 +360,7 @@ class Conversation(ChatGetter):
     async def _check_custom(self, built):
         for key, (ev, fut) in list(self._custom.items()):
             ev_type = type(ev)
-            inst = built[ev_type]
-
-            if inst:
+            if inst := built[ev_type]:
                 filter = ev.filter(inst)
                 if inspect.isawaitable(filter):
                     filter = await filter
